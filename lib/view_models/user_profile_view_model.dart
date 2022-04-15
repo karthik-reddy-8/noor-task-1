@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/constraints/colors.dart';
 import 'package:flutter_todo_app/constraints/preferences.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
-import 'package:flutter_todo_app/utils/App.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
 import 'package:flutter_todo_app/utils/preference_helper.dart';
 import 'package:flutter_todo_app/utils/utilities.dart';
+import 'package:flutter_todo_app/views/login_page.dart';
 import 'package:image_picker/image_picker.dart';
 
-class RegistrationViewModel extends ChangeNotifier {
+class UserProfileViewModel extends ChangeNotifier{
   String photoLink = '';
   bool isLoading = false;
   bool imageLoaded = false;
@@ -21,15 +22,14 @@ class RegistrationViewModel extends ChangeNotifier {
   DatabaseReference dbRef =
   FirebaseDatabase.instance.ref().child("Users");
 
-  String image = '';
-  final ImagePicker picker = ImagePicker();
-  TextEditingController firstName = TextEditingController();
-  TextEditingController lastName = TextEditingController();
-  TextEditingController contactNumber = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  String? image;
+  String? profileImage;
 
-  var secureText = true;
+  final ImagePicker picker = ImagePicker();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController contactNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
 
   String basename(var image) {
@@ -37,6 +37,35 @@ class RegistrationViewModel extends ChangeNotifier {
         .substring(image.lastIndexOf("/"), image.lastIndexOf("."))
         .replaceAll("/", "");
   }
+
+  Future<void> initCall() async{
+   profileImage = await readFromStorage(preference.photoUrl);
+   nameController.text = await readFromStorage(preference.name);
+   emailController.text = await readFromStorage(preference.email);
+   contactNumberController.text = await readFromStorage(preference.phone);
+   printLog('profileImage: $profileImage');
+   notifyListeners();
+  }
+
+  Future<void> userSignOut(BuildContext context) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.signOut().then((res) async {
+      await clearStorage();
+      await Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+              (Route<dynamic> route) => false);
+    }).catchError((err) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          err.message,
+          style: TextStyle(color: customColor.white),
+        ),
+        backgroundColor: Colors.black,
+      ));
+    });
+  }
+
 
   Future<void> uploadFile(PickedFile file, BuildContext context) async {
     isLoading = true;
@@ -52,8 +81,10 @@ class RegistrationViewModel extends ChangeNotifier {
     if (snapshot.state == TaskState.success) {
       photoLink = downloadUrl.toString();
       await writeIntoStorage(preference.photoUrl, downloadUrl.toString());
+      await updateDetails('photoUrl', photoLink);
       printLog(photoLink);
       showSnack(strings.profileUpdatedSuccessfully, context);
+      profileImage = await readFromStorage(preference.photoUrl);
       isLoading = false;
       imageLoaded = true;
       notifyListeners();
@@ -75,42 +106,25 @@ class RegistrationViewModel extends ChangeNotifier {
     uploadFile(_imageFile, context);
   }
 
-  void registerToFb(BuildContext context) async {
-    isLoading = true;
-    notifyListeners();
-    String fullName = firstName.text + ' ' + lastName.text;
-    await writeIntoStorage(preference.name, fullName);
-    await writeIntoStorage(preference.email, email.text);
-    firebaseAuth
-        .createUserWithEmailAndPassword(
-        email: email.text, password: password.text)
-        .then((result) {
-      dbRef.child(result.user!.uid).set({
-        "name": fullName,
-        "email": email.text,
-        "password": password.text,
-        "phone": contactNumber.text,
-        "photoUrl": photoLink
-      }).then((res) {
-        isLoading = false;
-        showSnack(strings.registrationSuccessful, context);
-        Navigator.pop(context);
-        notifyListeners();
-      });
-    }).catchError((err) {
-      isLoading = false;
-      showSnack(err.message, context);
-      notifyListeners();
+  Future<void> updateDetails(String key, String value) async {
+    await dbRef.child(result?.uid ?? '').update({
+      key: value,
     });
   }
-
-  @override
-  void dispose() {
-    firstName.dispose();
-    lastName.dispose();
-    email.dispose();
-    password.dispose();
-    contactNumber.dispose();
-    super.dispose();
-  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

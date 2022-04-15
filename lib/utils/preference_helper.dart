@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// [storage] holds the instance of FlutterSecureStorage class
-FlutterSecureStorage storage = FlutterSecureStorage();
+FlutterSecureStorage storage = const FlutterSecureStorage();
 
 /// method to store key value pairs into preference
 /// [key] pass the string key constant

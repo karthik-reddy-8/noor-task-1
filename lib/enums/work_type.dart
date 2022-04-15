@@ -1,0 +1,1 @@
+enum WorkType{personal, work, meeting, shopping}

@@ -37,7 +37,7 @@ class UserDataResponseModel {
   String? get phone => _phone;
   String? get photoUrl => _photoUrl;
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(decode) {
     final map = <String, dynamic>{};
     map['email'] = _email;
     map['name'] = _name;

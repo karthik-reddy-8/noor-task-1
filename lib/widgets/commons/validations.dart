@@ -2,6 +2,7 @@
 
 import 'package:flutter_todo_app/constraints/strings.dart';
 import 'package:flutter_todo_app/enums/validation.dart';
+import 'package:flutter_todo_app/enums/work_type.dart';
 
 final validation = ValidationExt();
 
@@ -14,6 +15,20 @@ class ValidationExt extends StringConstraints {
         return requiredFieldValidation(value);
       case Validations.mobile:
         return mobileNumberValidation(value);
+      default:
+        return null;
+    }
+  }
+  dynamic validateTaskType(WorkType workType){
+    switch(workType){
+      case WorkType.personal:
+        return strings.personal;
+      case WorkType.work:
+        return strings.work;
+      case WorkType.meeting:
+        return strings.meeting;
+      case WorkType.shopping:
+        return strings.shopping;
       default:
         return null;
     }
@@ -49,8 +64,9 @@ class ValidationExt extends StringConstraints {
     }
   }
 
+
   String? mobileNumberValidation(value) {
-    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String pattern = r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$';
     RegExp regex = RegExp(pattern);
     if (value.isEmpty || !regex.hasMatch(value)) {
       return mobileFieldErrorMessage;

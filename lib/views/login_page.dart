@@ -5,10 +5,10 @@ import 'package:flutter_todo_app/constraints/strings.dart';
 import 'package:flutter_todo_app/enums/validation.dart';
 import 'package:flutter_todo_app/utils/App.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
+import 'package:flutter_todo_app/utils/progress_dialog.dart';
 import 'package:flutter_todo_app/utils/text_form_filed.dart';
 import 'package:flutter_todo_app/view_models/login_view_model.dart';
 import 'package:flutter_todo_app/views/registration.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:stacked/stacked.dart';
 
 class Login extends StatefulWidget {
@@ -23,7 +23,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ModalProgressHUD(
+      body: ProgressDialog(
         inAsyncCall: widget.model.isLoading,
         child: SingleChildScrollView(
           child: buildColumn(widget.model),
@@ -37,6 +37,7 @@ class _LoginState extends State<Login> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildContainer(),
+        App.columnSpacer(),
         Center(
           child: Container(
             width: App.width * 0.9,
@@ -114,16 +115,13 @@ class _LoginState extends State<Login> {
                             TextSpan(
                               text: strings.signUp,
                               style: TextStyle(
+                                  fontSize: 18,
                                   fontStyle: App.textTheme.headline1!.fontStyle,
-                                  color: customColor.skyBlue),
+                                  color: customColor.blueAccent),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  // App.push(const RegistrationPage());
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const RegistrationPage()));
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) => const RegistrationPage()));
                                 },
                             ),
                           ]),
@@ -144,7 +142,7 @@ class _LoginState extends State<Login> {
       width: App.width * 0.9,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(bottomRight: Radius.circular(90)),
-        color: customColor.blueLight,
+        color: customColor.blueAccent,
       ),
       child: Center(
           child: Text(

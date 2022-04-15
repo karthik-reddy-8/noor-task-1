@@ -23,6 +23,15 @@ class StringConstraints {
   final String todo = 'Todo';
   final String invalidUsername = 'Invalid Username or Password, please try again..';
 
+  //common
+  final String logOut = 'Logout';
+  final String cancel = 'Cancel';
+  final String save = 'Save';
+  final String name = 'Name';
+  final String updatedSuccessfully = 'Task Updated successfully';
+  final String profileUpdatedSuccessfully = 'Profile Picture uploaded Successfully';
+  final String imageUploadFailed = 'Unable to upload the image';
+
   //registration
   final String registration = 'Registration';
   final String firstName = 'First name';
@@ -44,4 +53,20 @@ class StringConstraints {
   final String work = 'Work';
   final String meeting = 'Meeting';
   final String shopping = 'Shopping';
+  final String addNewTask = 'Add new task';
+  final String addTask = 'Add task';
+  final String addYourTask = 'Add your task here';
+  final String chooseDate = 'Choose date';
+
+  // Tasks
+  final String allTasks = 'All Tasks';
+  final String onGoingTasks = 'Ongoing Tasks';
+  final String completedTasks = 'Completed Tasks';
+  final String noDataFound = 'No data found.!';
+  final String markAsCompleted = 'Mark as completed';
+
+  // User profile
+  final String userProfile  = 'Profile';
+  final String update = 'Update';
+
 }

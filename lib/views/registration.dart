@@ -5,9 +5,10 @@ import 'package:flutter_todo_app/constraints/strings.dart';
 import 'package:flutter_todo_app/enums/validation.dart';
 import 'package:flutter_todo_app/utils/App.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
+import 'package:flutter_todo_app/utils/progress_dialog.dart';
 import 'package:flutter_todo_app/utils/text_form_filed.dart';
 import 'package:flutter_todo_app/view_models/registration_view_model.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
 
 class Registration extends StatefulWidget {
@@ -28,7 +29,7 @@ class _RegistrationState extends State<Registration> {
           color: customColor.white,
         ),
       ),
-      body: ModalProgressHUD(
+      body: ProgressDialog(
         inAsyncCall: widget.model.isLoading,
         child: SingleChildScrollView(
           child: Center(
@@ -51,7 +52,15 @@ class _RegistrationState extends State<Registration> {
           children: <Widget>[
             App.columnSpacer(),
             Center(
-              child: model.imageProfile(context,model.photoLink),
+              child: imageProfile(
+                  cameraCallback: () {
+                    widget.model.takePhoto(ImageSource.camera, context);
+                  },
+                  context: context,
+                  galleryCallback: () {
+                    widget.model.takePhoto(ImageSource.gallery, context);
+                  },
+                  imageLink: model.photoLink,),
             ),
             App.columnSpacer(),
             formFieldLabel(label: strings.firstName),
@@ -125,13 +134,6 @@ class _RegistrationState extends State<Registration> {
               inputType: TextInputType.text,
               inputAction: TextInputAction.done,
               validationType: Validations.requiredFieldValidator,
-              // formatter: [
-              //   FilteringTextInputFormatter.allow(
-              //     RegExp(
-              //       r'[a-zA-Z][0-9]',
-              //     ),
-              //   ),
-              // ],
               suffixIcon: IconButton(
                 icon: Icon(
                   model.secureText

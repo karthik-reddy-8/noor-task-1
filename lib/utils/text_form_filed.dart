@@ -19,6 +19,7 @@ class TextFormFieldWidget extends StatelessWidget {
         this.validationType = Validations.requiredFieldValidator,
         this.isLabelFloating = true,
         this.hasBorder = false,
+        this.needSpace = true,
         this.obscure = false,
         this.maxLengthEnforced = false,
         this.prefixIcon,
@@ -34,6 +35,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final TextInputAction inputAction;
   final bool isLabelFloating;
   final bool hasBorder;
+  final bool needSpace;
   final Validations validationType;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -46,9 +48,13 @@ class TextFormFieldWidget extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: obscure,
-      style: TextStyle(
+      style: needSpace ? TextStyle(
           fontSize: App.textTheme.subtitle1!.fontSize,
-          color: isEnabled ? customColor.labelColor : Colors.grey),
+          color: isEnabled ? customColor.labelColor : Colors.grey) :
+      TextStyle(
+          // fontSize: App.textTheme.caption!.fontSize,
+          fontSize: 30,
+          color: isEnabled ? customColor.black : customColor.labelColor),
       decoration: InputDecoration(
           labelText: isLabelFloating ? hint : null,
           hintText: !isLabelFloating ? hint : '',
@@ -71,7 +77,7 @@ class TextFormFieldWidget extends StatelessWidget {
           suffixIcon: (suffixIcon == null) ? null : suffixIcon),
       inputFormatters: formatter,
       keyboardType: inputType,
-      maxLines: maxLengthEnforced ? null : 1,
+      maxLines: maxLengthEnforced ? 2 : 1,
       // ignore: deprecated_member_use
       maxLengthEnforced: maxLengthEnforced,
       textInputAction: inputAction,

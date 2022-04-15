@@ -2,7 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/constraints/colors.dart';
+import 'package:flutter_todo_app/constraints/preferences.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
+import 'package:flutter_todo_app/utils/App.dart';
+import 'package:flutter_todo_app/utils/preference_helper.dart';
+import 'package:flutter_todo_app/utils/utilities.dart';
 import 'package:flutter_todo_app/views/dashboard_page.dart';
 
 class LoginViewModel extends ChangeNotifier{
@@ -15,23 +19,27 @@ class LoginViewModel extends ChangeNotifier{
   bool isLoading = false;
   var secureText = true;
 
-  logInToFb(BuildContext context) async {
+  Future<void> logInToFb(BuildContext context) async {
     isLoading = true;
     notifyListeners();
     firebaseAuth
         .signInWithEmailAndPassword(
         email: emailController.text, password: passController.text)
         .then((result) async {
-          // DatabaseReference dbRefer = FirebaseDatabase.instance.ref();
-          // dbRefer.child('Users').orderByKey()
-          //     .equalTo(result.user?.uid)
-          //     .once()
-          //     .then((event) {
-          //       dynamic data = event.snapshot.value;
-          //       print(data);
-          // });
-      Navigator.pushReplacement(context,
-               MaterialPageRoute(builder: (context) => const DashboardPage()));
+          DatabaseReference dbRefer = FirebaseDatabase.instance.ref();
+          dbRefer.child('Users').orderByKey()
+              .equalTo(result.user?.uid)
+              .once()
+              .then((event) async {
+                dynamic data = event.snapshot.value;
+                 writeIntoStorage(preference.name, data[result.user!.uid]['name']);
+                 writeIntoStorage(preference.photoUrl, data[result.user!.uid]['photoUrl']);
+                 writeIntoStorage(preference.phone, data[result.user!.uid]['phone']);
+                 writeIntoStorage(preference.email, data[result.user!.uid]['email']);
+                printLog(data);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const DashboardPage()));
+          });
     }).catchError((err) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
