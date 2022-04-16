@@ -43,7 +43,6 @@ class _AllTasksDetailsPageState extends State<AllTasksDetailsPage> {
                       child: const Icon(Icons.delete_forever),
                     ),
                     key: ValueKey<int>(snapshot.data![index].id!),
-                    // key: UniqueKey(),
                     onDismissed: (DismissDirection direction) async {
                       await widget.model.database.todoDAO
                           .deleteTodo(snapshot.data![index].id!);
@@ -56,13 +55,6 @@ class _AllTasksDetailsPageState extends State<AllTasksDetailsPage> {
                         status: snapshot.data![index].finished,
                         callback: () {
                           printLog('value Id: ${snapshot.data![index].id}');
-                          // showDialogBox(
-                          //     context: context,
-                          //     callback: (){
-                          //       widget.model.updateTodo(
-                          //           snapshot.data![index].finished,
-                          //           snapshot.data![index].id!);
-                          //     });
                           widget.model.updateTodo(
                               snapshot.data![index].finished,
                               snapshot.data![index].id!);

@@ -6,8 +6,6 @@ import 'package:flutter_todo_app/utils/utilities.dart';
 class AllTaskDetailsViewModel extends ChangeNotifier{
   bool isLoading = false;
   late TodoDatabase database;
-  // String workType;
-  // AllTaskDetailsViewModel({required this.workType});
 
   Future<List<Todo>> getAllTodos(String workType) async {
     $FloorTodoDatabase

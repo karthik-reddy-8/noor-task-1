@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,13 +7,10 @@ import 'package:flutter_todo_app/constraints/strings.dart';
 import 'package:flutter_todo_app/database/database.dart';
 import 'package:flutter_todo_app/database/entity/task.dart';
 import 'package:flutter_todo_app/enums/work_type.dart';
-import 'package:flutter_todo_app/services/model/response/user_data_response_model.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
 import 'package:flutter_todo_app/utils/preference_helper.dart';
 import 'package:flutter_todo_app/utils/utilities.dart';
-import 'package:flutter_todo_app/views/dashboard_page.dart';
 import 'package:flutter_todo_app/widgets/commons/validations.dart';
-import 'package:stacked/stacked.dart';
 
 class DashboardViewModel extends ChangeNotifier {
   bool isLoading = false;
@@ -31,7 +26,6 @@ class DashboardViewModel extends ChangeNotifier {
   int? count;
   final formKey = GlobalKey<FormState>();
   TextEditingController taskController = TextEditingController();
-  UserDataResponseModel responseModel = UserDataResponseModel();
 
   Future<dynamic> initCall() async {
     await getDataFromPrefs();
@@ -52,11 +46,11 @@ class DashboardViewModel extends ChangeNotifier {
         .build()
         .then((value) async {
       database = value;
-      final counter = await database?.todoDAO.getTodoCountByType('Personal');
-      notifyListeners();
-      printLog('counter: ${counter.toString()}');
-      return counter;
     });
+    int? counter = await database?.todoDAO.getTodoCountByType('Personal');
+    notifyListeners();
+    printLog('counter: $counter');
+    return counter;
   }
 
   Future<void> changeWorkStatus(WorkType workType) async {
@@ -79,41 +73,16 @@ class DashboardViewModel extends ChangeNotifier {
           selectedDate.minute.toString() +
           ' - ${selectedDate.hour + 1}:00';
       printLog('selectedDateTime: $selectedTime');
-      if (selectedDate.day.toString() == DateTime.now().day.toString()) {
-        selectedDateTime = 'Today';
-        printLog('selectedDateTime: $selectedDateTime');
-      } else {
-        return;
-      }
+      // if (selectedDate.day.toString() == DateTime.now().day.toString()) {
+      //   selectedDateTime = 'Today';
+      //   printLog('selectedDateTime: $selectedDateTime');
+      // } else {
+      //   return;
+      // }
     }
     notifyListeners();
   }
 
-  // Future<dynamic> getUserData() async{
-  //  printLog('User Id:- ${auth.currentUser?.uid}');
-  //  dbRefer.child('Users').orderByKey()
-  //      .equalTo(auth.currentUser?.uid)
-  //      .once()
-  //      .then((event) {
-  //   dynamic response = event.snapshot.value;
-  //   printLog('User data:- $response');
-  //   userList.clear();
-  //   response.forEach((key, value){
-  //    UserDataResponseModel responseModel = UserDataResponseModel(
-  //     photoUrl: value['photoUrl'],
-  //     phone: value['phone'],
-  //     password: value['password'],
-  //     email: value['email'],
-  //     name: value['name']
-  //    );
-  //    userList.add(responseModel);
-  //   });
-  //   notifyListeners();
-  //  }).catchError((onError) {
-  //   printLog(onError);
-  //    // showSnack(message: onError);
-  //  });
-  // }
 
   Future<dynamic> addTodo() async {
     $FloorTodoDatabase
@@ -126,7 +95,7 @@ class DashboardViewModel extends ChangeNotifier {
     });
   }
 
-  Future<List<Todo>?> getAllTodos(String workType) async {
+  Future<int?> getAllTodos(String workType) async {
     $FloorTodoDatabase
         .databaseBuilder('Todo_database.db')
         .build()
@@ -134,7 +103,7 @@ class DashboardViewModel extends ChangeNotifier {
       database = value;
       notifyListeners();
     });
-    return await database?.todoDAO.findTodoByType(workType);
+    return await database?.todoDAO.findTodoByType(workType).then((value) => value.length);
   }
 
   Future<dynamic> addTodoItem(TodoDatabase database) async {
