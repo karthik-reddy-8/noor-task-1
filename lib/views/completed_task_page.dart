@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
 import 'package:flutter_todo_app/database/entity/task.dart';
-import 'package:flutter_todo_app/utils/App.dart';
+import 'package:flutter_todo_app/utils/app.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
 import 'package:flutter_todo_app/utils/progress_dialog.dart';
 import 'package:flutter_todo_app/utils/utilities.dart';
@@ -9,9 +9,12 @@ import 'package:flutter_todo_app/view_models/completed_tasks_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class CompletedTaskPage extends StatefulWidget {
-  const CompletedTaskPage({Key? key, required this.model, required this.workType}) : super(key: key);
+  const CompletedTaskPage(
+      {Key? key, required this.model, required this.workType})
+      : super(key: key);
   final CompletedTaskViewModel model;
   final String workType;
+
   @override
   State<CompletedTaskPage> createState() => _CompletedTaskPageState();
 }
@@ -36,7 +39,7 @@ class _CompletedTaskPageState extends State<CompletedTaskPage> {
                       color: Colors.red,
                       alignment: Alignment.centerRight,
                       padding:
-                      EdgeInsets.symmetric(horizontal: App.height * 0.05),
+                          EdgeInsets.symmetric(horizontal: App.height * 0.05),
                       child: const Icon(Icons.delete_forever),
                     ),
                     key: ValueKey<int>(snapshot.data![index].id!),
@@ -55,9 +58,8 @@ class _CompletedTaskPageState extends State<CompletedTaskPage> {
                           widget.model.updateTodo(
                               snapshot.data![index].finished,
                               snapshot.data![index].id!);
-                          showSnack(strings.updatedSuccessfully,context);
-                        }
-                    ),
+                          showSnack(strings.updatedSuccessfully);
+                        }),
                   );
                 },
               );
@@ -74,13 +76,13 @@ class _CompletedTaskPageState extends State<CompletedTaskPage> {
 class CompletedTasks extends StatelessWidget {
   const CompletedTasks({Key? key, required this.workType}) : super(key: key);
   final String workType;
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CompletedTaskViewModel>.reactive(
         viewModelBuilder: () => CompletedTaskViewModel(),
-        builder: (_, model, __){
-          return CompletedTaskPage(model: model, workType:workType);
+        builder: (_, model, __) {
+          return CompletedTaskPage(model: model, workType: workType);
         });
   }
 }
-

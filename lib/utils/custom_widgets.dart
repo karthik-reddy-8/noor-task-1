@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_todo_app/constraints/colors.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
-import 'package:flutter_todo_app/utils/App.dart';
+import 'package:flutter_todo_app/utils/app.dart';
 import 'package:flutter_todo_app/utils/utilities.dart';
 
-void showSnack(String message, BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
+void showSnack(String message) {
+  ScaffoldMessenger.of(App.ctx!).showSnackBar(
     SnackBar(
       content: Text(message),
       backgroundColor: Colors.black,
@@ -145,9 +144,9 @@ Widget buildCard(
             fontWeight: FontWeight.bold),
       ),
       trailing: Icon(
-          Icons.circle,
-          color: status ? customColor.greenLight : customColor.red,
-        ),
+        Icons.circle,
+        color: status ? customColor.greenLight : customColor.red,
+      ),
       dense: true,
     ),
   );
@@ -236,9 +235,7 @@ Widget imageProfile({
   return Stack(
     children: [
       Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(70)
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(70)),
         elevation: 5,
         shadowColor: customColor.white,
         child: CircleAvatar(
@@ -274,13 +271,11 @@ Widget imageProfile({
             showModalBottomSheet(
               isScrollControlled: true,
               context: context,
-              builder: ((builder) =>
-                  buildBottomSheet(
-                      cameraCallback: () => cameraCallback(),
-                      context: context,
-                      title: strings.choosePhoto,
-                      galleryCallback: () => galleryCallback())
-              ),
+              builder: ((builder) => buildBottomSheet(
+                  cameraCallback: () => cameraCallback(),
+                  context: context,
+                  title: strings.choosePhoto,
+                  galleryCallback: () => galleryCallback())),
             );
           },
           child: const CircleAvatar(
@@ -297,6 +292,3 @@ Widget imageProfile({
     ],
   );
 }
-
-
-

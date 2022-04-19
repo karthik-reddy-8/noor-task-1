@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
 import 'package:flutter_todo_app/database/entity/task.dart';
-import 'package:flutter_todo_app/utils/App.dart';
+import 'package:flutter_todo_app/utils/app.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
 import 'package:flutter_todo_app/utils/progress_dialog.dart';
 import 'package:flutter_todo_app/utils/utilities.dart';
@@ -58,7 +58,7 @@ class _OngoingTasksPageState extends State<OngoingTasksPage> {
                           widget.model.updateTodo(
                               snapshot.data![index].finished,
                               snapshot.data![index].id!);
-                          showSnack(strings.updatedSuccessfully, context);
+                          showSnack(strings.updatedSuccessfully);
                         }),
                   );
                 },

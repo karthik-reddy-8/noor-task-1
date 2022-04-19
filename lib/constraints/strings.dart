@@ -5,7 +5,8 @@ class StringConstraints {
   final String appName = 'Todo Application';
   final String getStarted = 'Get Started';
   final String reminder = 'Reminders made simple';
-  final String reminderText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris pellentesque erat in blandit luctus.';
+  final String reminderText =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, Mauris pellentesque erat in blandit luctus.';
 
 //Login page
   final String requiredFieldErrorMessage = 'This field is required!';
@@ -21,7 +22,8 @@ class StringConstraints {
   final String signUp = 'SignUp?';
   final String userLogin = 'User Login';
   final String todo = 'Todo';
-  final String invalidUsername = 'Invalid Username or Password, please try again..';
+  final String invalidUsername =
+      'Invalid Username or Password, please try again..';
 
   //common
   final String logOut = 'Logout';
@@ -29,7 +31,8 @@ class StringConstraints {
   final String save = 'Save';
   final String name = 'Name';
   final String updatedSuccessfully = 'Task Updated successfully';
-  final String profileUpdatedSuccessfully = 'Profile Picture uploaded Successfully';
+  final String profileUpdatedSuccessfully =
+      'Profile Picture uploaded Successfully';
   final String imageUploadFailed = 'Unable to upload the image';
 
   //registration
@@ -56,7 +59,7 @@ class StringConstraints {
   final String addNewTask = 'Add new task';
   final String addTask = 'Add task';
   final String addYourTask = 'Add your task here';
-  final String chooseDate = 'Choose date';
+  final String chooseDate = 'Choose Date and Time';
 
   // Tasks
   final String allTasks = 'All Tasks';
@@ -66,7 +69,6 @@ class StringConstraints {
   final String markAsCompleted = 'Mark as completed';
 
   // User profile
-  final String userProfile  = 'Profile';
+  final String userProfile = 'Profile';
   final String update = 'Update';
-
 }

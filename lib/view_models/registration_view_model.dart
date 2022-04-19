@@ -3,10 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/constraints/colors.dart';
 import 'package:flutter_todo_app/constraints/preferences.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
-import 'package:flutter_todo_app/utils/App.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
 import 'package:flutter_todo_app/utils/preference_helper.dart';
 import 'package:flutter_todo_app/utils/utilities.dart';
@@ -18,8 +16,7 @@ class RegistrationViewModel extends ChangeNotifier {
   bool imageLoaded = false;
   User? result = FirebaseAuth.instance.currentUser;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  DatabaseReference dbRef =
-  FirebaseDatabase.instance.ref().child("Users");
+  DatabaseReference dbRef = FirebaseDatabase.instance.ref().child("Users");
 
   String image = '';
   final ImagePicker picker = ImagePicker();
@@ -38,12 +35,9 @@ class RegistrationViewModel extends ChangeNotifier {
         .replaceAll("/", "");
   }
 
-  Future<void> uploadFile(PickedFile file, BuildContext context) async {
+  Future<void> uploadFile(XFile file, BuildContext context) async {
     isLoading = true;
     notifyListeners();
-    if (file == null) {
-      return;
-    }
     String imageName = basename(file.path);
     final destination = 'Profile-pic/$imageName';
     final ref = FirebaseStorage.instance.ref().child(destination);
@@ -53,21 +47,21 @@ class RegistrationViewModel extends ChangeNotifier {
       photoLink = downloadUrl.toString();
       await writeIntoStorage(preference.photoUrl, downloadUrl.toString());
       printLog(photoLink);
-      showSnack(strings.profileUpdatedSuccessfully, context);
+      showSnack(strings.profileUpdatedSuccessfully);
       isLoading = false;
       imageLoaded = true;
       notifyListeners();
     } else {
-      showSnack(strings.imageUploadFailed, context);
+      showSnack(strings.imageUploadFailed);
     }
   }
 
   // Take image
   void takePhoto(ImageSource source, BuildContext context) async {
-    final pickerFile = await picker.getImage(
+    XFile? pickerFile = await picker.pickImage(
       source: source,
     );
-    PickedFile? _imageFile;
+    XFile? _imageFile;
     _imageFile = pickerFile!;
     image = _imageFile.toString();
     printLog(_imageFile);
@@ -83,7 +77,7 @@ class RegistrationViewModel extends ChangeNotifier {
     await writeIntoStorage(preference.email, email.text);
     firebaseAuth
         .createUserWithEmailAndPassword(
-        email: email.text, password: password.text)
+            email: email.text, password: password.text)
         .then((result) {
       dbRef.child(result.user!.uid).set({
         "name": fullName,
@@ -93,13 +87,13 @@ class RegistrationViewModel extends ChangeNotifier {
         "photoUrl": photoLink
       }).then((res) {
         isLoading = false;
-        showSnack(strings.registrationSuccessful, context);
+        showSnack(strings.registrationSuccessful);
         Navigator.pop(context);
         notifyListeners();
       });
     }).catchError((err) {
       isLoading = false;
-      showSnack(err.message, context);
+      showSnack(err.message);
       notifyListeners();
     });
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/constraints/colors.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
 
-import 'App.dart';
+import 'app.dart';
 
 void printLog(message) {
   if (!kReleaseMode) {

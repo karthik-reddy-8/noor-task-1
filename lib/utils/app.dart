@@ -15,6 +15,7 @@ final App = AppContext();
 extension AppExt on AppContext {
   /// [ctx] is the context of the app.
   BuildContext? get ctx => AppContext.navigatorState.currentContext;
+
   /// [theme] is the theme of the app.
   ThemeData get theme {
     var _theme = ThemeData.fallback();
@@ -38,13 +39,13 @@ extension AppExt on AppContext {
 
   /// [columnSpacer] is a Custom Spacer to add space between columns.
   Widget columnSpacer({double? height}) => SizedBox(
-    height: height ?? width * 0.05,
-  );
+        height: height ?? width * 0.05,
+      );
 
   /// [rowSpacer] is a Custom Spacer to add space between rows. q1Aq
   Widget rowSpacer({double? width}) => SizedBox(
-    width: width ?? height * 0.02,
-  );
+        width: width ?? height * 0.02,
+      );
 
   /// [textTheme] is the text theme of the app.
   TextTheme get textTheme => theme.textTheme;

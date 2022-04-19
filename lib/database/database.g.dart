@@ -149,6 +149,7 @@ class _$TodoDAO extends TodoDAO {
     await _queryAdapter.queryNoReturn(
         'SELECT COUNT (*) FROM Todo WHERE type =?1',
         arguments: [type]);
+    return null;
   }
 
   @override

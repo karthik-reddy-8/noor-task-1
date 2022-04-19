@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_todo_app/constraints/colors.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
 import 'package:flutter_todo_app/enums/validation.dart';
-import 'package:flutter_todo_app/utils/App.dart';
+import 'package:flutter_todo_app/utils/app.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
 import 'package:flutter_todo_app/utils/progress_dialog.dart';
 import 'package:flutter_todo_app/utils/text_form_filed.dart';
@@ -30,9 +30,8 @@ class _UserProfileState extends State<UserProfile> {
         inAsyncCall: widget.model.isLoading,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom
-          ),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
           child: buildContainer(context, widget.model),
         ),
       ),
@@ -72,7 +71,8 @@ class _UserProfileState extends State<UserProfile> {
                   showModalBottomSheet(
                       context: context,
                       shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(25.0))),
                       isScrollControlled: true,
                       builder: (context) => SingleChildScrollView(
                           padding: EdgeInsets.only(
@@ -106,7 +106,8 @@ class _UserProfileState extends State<UserProfile> {
                       context: context,
                       isScrollControlled: true,
                       shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(25.0))),
                       builder: (context) => SingleChildScrollView(
                           padding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -192,61 +193,61 @@ class _UpdateUserDetailsState extends State<UpdateUserDetails> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(30.0),
-        decoration: BoxDecoration(
-          color: customColor.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
+      padding: const EdgeInsets.all(30.0),
+      decoration: BoxDecoration(
+        color: customColor.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Enter your ${widget.title}',
-              textAlign: TextAlign.left,
-              style: const TextStyle(
-                fontSize: 20,
-              ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Enter your ${widget.title}',
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              fontSize: 20,
             ),
-            App.columnSpacer(height: App.height * 0.02),
-            TextFormFieldWidget(
-              controller: widget.controller,
-              validationType: Validations.requiredFieldValidator,
-              inputType: TextInputType.text,
-              inputAction: TextInputAction.done,
-              isEnabled: true,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      strings.cancel,
-                      style: TextStyle(color: customColor.labelColor),
-                    )),
-                const SizedBox(),
-                TextButton(
-                    onPressed: () {
-                      widget.model
-                          .updateDetails(widget.keyPair, widget.value);
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      strings.save,
-                      style: TextStyle(color: customColor.labelColor),
-                    )),
-              ],
-            )
-          ],
-        ));
+          ),
+          App.columnSpacer(height: App.height * 0.02),
+          TextFormFieldWidget(
+            controller: widget.controller,
+            validationType: Validations.requiredFieldValidator,
+            inputType: TextInputType.text,
+            inputAction: TextInputAction.done,
+            isEnabled: true,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    App.pop();
+                  },
+                  child: Text(
+                    strings.cancel,
+                    style: TextStyle(color: customColor.labelColor),
+                  )),
+              const SizedBox(),
+              TextButton(
+                  onPressed: () {
+                    widget.model.updateDetails(widget.keyPair, widget.value);
+                    App.pop();
+                  },
+                  child: Text(
+                    strings.save,
+                    style: TextStyle(color: customColor.labelColor),
+                  )),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

@@ -49,8 +49,10 @@ class SplashScreen extends StatelessWidget {
             elevatedButton(
                 message: strings.getStarted,
                 callBack: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()));
                   // App.pushReplacement(const LoginPage());
                 },
                 backgroundColor: customColor.green,

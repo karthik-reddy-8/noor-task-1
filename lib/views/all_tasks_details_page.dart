@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/constraints/strings.dart';
 import 'package:flutter_todo_app/database/entity/task.dart';
-import 'package:flutter_todo_app/utils/App.dart';
+import 'package:flutter_todo_app/utils/app.dart';
 import 'package:flutter_todo_app/utils/custom_widgets.dart';
 import 'package:flutter_todo_app/utils/progress_dialog.dart';
 import 'package:flutter_todo_app/utils/utilities.dart';
@@ -29,9 +29,9 @@ class _AllTasksDetailsPageState extends State<AllTasksDetailsPage> {
           future: widget.model.getAllTodos(widget.workType),
           builder: (BuildContext context, AsyncSnapshot<List<Todo>> snapshot) {
             if (snapshot.hasData) {
+              printLog(snapshot.data?.length);
               return ListView.builder(
                 itemCount: snapshot.data?.length,
-                shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return Dismissible(
                     direction: DismissDirection.endToStart,
@@ -44,9 +44,10 @@ class _AllTasksDetailsPageState extends State<AllTasksDetailsPage> {
                     ),
                     key: ValueKey<int>(snapshot.data![index].id!),
                     onDismissed: (DismissDirection direction) async {
-                      await widget.model.database.todoDAO
+                      await widget.model.database?.todoDAO
                           .deleteTodo(snapshot.data![index].id!);
-                      setState(() {
+                      setState(() async {
+                        printLog('Type of work: ${snapshot.data![index].id!}');
                         snapshot.data!.remove(snapshot.data![index]);
                       });
                     },
@@ -54,11 +55,10 @@ class _AllTasksDetailsPageState extends State<AllTasksDetailsPage> {
                         title: snapshot.data![index].title,
                         status: snapshot.data![index].finished,
                         callback: () {
-                          printLog('value Id: ${snapshot.data![index].id}');
                           widget.model.updateTodo(
                               snapshot.data![index].finished,
                               snapshot.data![index].id!);
-                          showSnack(strings.updatedSuccessfully, context);
+                          showSnack(strings.updatedSuccessfully);
                         }),
                   );
                 },
@@ -81,8 +81,6 @@ class AllTasksDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<AllTaskDetailsViewModel>.reactive(
         viewModelBuilder: () => AllTaskDetailsViewModel(),
-        // viewModelBuilder: () => AllTaskDetailsViewModel(workType: workType),
-        // onModelReady: (m) => m.getAllTodos(),
         builder: (_, model, __) {
           return AllTasksDetailsPage(
             model: model,

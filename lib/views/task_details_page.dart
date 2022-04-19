@@ -9,6 +9,7 @@ import 'package:stacked/stacked.dart';
 class TaskDetailsPage extends StatefulWidget {
   const TaskDetailsPage({Key? key, required this.model}) : super(key: key);
   final TaskDetailsViewModel model;
+
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
 }
@@ -19,7 +20,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        backwardsCompatibility: true,
         centerTitle: true,
         title: Text(strings.allTasks),
         iconTheme: IconThemeData(color: customColor.white),
@@ -38,7 +38,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
         }),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.task,
+            icon: Icon(
+              Icons.task,
               color: customColor.white,
             ),
             label: strings.allTasks,
@@ -75,9 +76,8 @@ class TasksDetails extends StatelessWidget {
     return ViewModelBuilder<TaskDetailsViewModel>.reactive(
         viewModelBuilder: () => TaskDetailsViewModel(),
         onModelReady: (m) => m.initCAll(workType),
-        builder: (_, model, __){
+        builder: (_, model, __) {
           return TaskDetailsPage(model: model);
         });
   }
 }
-
