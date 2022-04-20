@@ -4,8 +4,8 @@ import 'package:math_expressions/math_expressions.dart';
 class HomeViewModel extends ChangeNotifier {
   var userInput = '';
   var answer = '';
+  bool isDarkMode = false;
 
-// Array of button
   final List<String> buttons = [
     'AC',
     'DEL',
@@ -57,7 +57,6 @@ class HomeViewModel extends ChangeNotifier {
   Future<void> equalPressed() async{
     String finalUserInput = userInput;
     finalUserInput = userInput.replaceAll('x', '*');
-
     Parser p = Parser();
     Expression exp = p.parse(finalUserInput);
     ContextModel cm = ContextModel();

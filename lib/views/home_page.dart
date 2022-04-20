@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calculator/constaints/colors.dart';
+import 'package:flutter_calculator/constants/colors.dart';
 import 'package:flutter_calculator/utils/app.dart';
 import 'package:flutter_calculator/utils/custom_widgets.dart';
 import 'package:flutter_calculator/view_models/home_view_model.dart';
@@ -44,9 +44,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                 alignment: Alignment.topRight,
                                 onPressed: () {
                                   model.toggleMode();
+                                  widget.model.isDarkMode =
+                                      !widget.model.isDarkMode;
                                 },
                                 icon: const Icon(Icons.light_mode_outlined)),
-                            App.columnSpacer(height: App.height * 0.15),
+                            App.columnSpacer(height: App.height * 0.1),
                             Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: App.width * 0.03),
@@ -54,10 +56,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                               child: Text(
                                 widget.model.userInput,
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: App.textTheme.headline6!.fontSize,
                                     color: customColor.labelColor),
                               ),
                             ),
+                            App.columnSpacer(height: App.height * 0.01),
                             Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: App.width * 0.03),
@@ -65,8 +68,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                               child: Text(
                                 widget.model.answer,
                                 style: TextStyle(
-                                    fontSize: 30,
-                                    color: customColor.black,
+                                    fontSize: App.textTheme.headline2!.fontSize,
+                                    color: widget.model.isDarkMode
+                                        ? customColor.white
+                                        : customColor.black,
                                     fontWeight: FontWeight.bold),
                               ),
                             )
@@ -88,7 +93,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                   widget.model.changeInitialValues();
                                 },
                                 buttonText: widget.model.buttons[index],
-                                color: customColor.grey,
+                                color: widget.model.isDarkMode
+                                    ? customColor.grey
+                                    : customColor.transparent,
                                 textColor: customColor.labelColor,
                               );
                             } else if (index == 1) {
@@ -98,7 +105,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                       .deleteUserInputs(widget.model.userInput);
                                 },
                                 buttonText: widget.model.buttons[index],
-                                color: customColor.grey,
+                                color: widget.model.isDarkMode
+                                    ? customColor.grey
+                                    : customColor.transparent,
                                 textColor: customColor.labelColor,
                               );
                             } else if (index == 2) {
@@ -107,7 +116,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                   widget.model.buttonIndex(index);
                                 },
                                 buttonText: widget.model.buttons[index],
-                                color: customColor.white,
+                                color: widget.model.isDarkMode
+                                    ? customColor.white
+                                    : customColor.transparent,
                                 textColor: customColor.teal,
                               );
                             } else if (index == 16) {
@@ -125,7 +136,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                   widget.model.equalPressed();
                                 },
                                 buttonText: widget.model.buttons[index],
-                                color: customColor.white,
+                                color: widget.model.isDarkMode
+                                    ? customColor.white
+                                    : customColor.transparent,
                                 textColor: customColor.teal,
                               );
                             } else {
@@ -136,7 +149,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                 buttonText: widget.model.buttons[index],
                                 color: widget.model
                                         .isOperator(widget.model.buttons[index])
+                                    ? (widget.model.isDarkMode
                                     ? customColor.white
+                                    : customColor.transparent)
                                     : customColor.transparent,
                                 textColor: widget.model
                                         .isOperator(widget.model.buttons[index])

@@ -10,9 +10,9 @@ Widget buildButton({
   return GestureDetector(
     onTap: buttonTapped,
     child: Padding(
-      padding: const EdgeInsets.all(0.2),
+      padding: EdgeInsets.symmetric(horizontal: App.width * 0.014, vertical: App.height * 0.006),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(60),
+        borderRadius: BorderRadius.circular(40),
         child: Container(
           color: color,
           child: Center(
@@ -20,7 +20,7 @@ Widget buildButton({
               buttonText,
               style: TextStyle(
                 color: textColor,
-                fontSize: App.textTheme.headline4!.fontSize,
+                fontSize: App.textTheme.headline5!.fontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
