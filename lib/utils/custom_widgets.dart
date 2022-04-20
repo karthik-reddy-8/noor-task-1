@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_calculator/utils/app.dart';
 
 Widget buildButton({
@@ -16,7 +16,11 @@ Widget buildButton({
         child: Container(
           color: color,
           child: Center(
-            child: Text(
+            child: buttonText == 'DEL' ? Icon(
+                Icons.backspace_outlined,
+              color: textColor,
+            ) :
+            Text(
               buttonText,
               style: TextStyle(
                 color: textColor,

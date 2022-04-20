@@ -47,14 +47,16 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                   widget.model.isDarkMode =
                                       !widget.model.isDarkMode;
                                 },
-                                icon: const Icon(Icons.light_mode_outlined)),
+                                icon: widget.model.isDarkMode
+                                    ? const Icon(Icons.light_mode_outlined)
+                                    : const Icon(Icons.bedtime_outlined)),
                             App.columnSpacer(height: App.height * 0.1),
                             Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: App.width * 0.03),
                               alignment: Alignment.centerRight,
                               child: Text(
-                                widget.model.userInput,
+                                widget.model.userInput.replaceAll('+/_', '-'),
                                 style: TextStyle(
                                     fontSize: App.textTheme.headline6!.fontSize,
                                     color: customColor.labelColor),
@@ -124,6 +126,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                             } else if (index == 16) {
                               return buildButton(
                                 buttonText: widget.model.buttons[index],
+                                buttonTapped: () {
+                                  widget.model.buttonIndex(index);
+                                },
                                 color: widget.model
                                         .isOperator(widget.model.buttons[index])
                                     ? customColor.transparent
@@ -150,8 +155,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                 color: widget.model
                                         .isOperator(widget.model.buttons[index])
                                     ? (widget.model.isDarkMode
-                                    ? customColor.white
-                                    : customColor.transparent)
+                                        ? customColor.white
+                                        : customColor.transparent)
                                     : customColor.transparent,
                                 textColor: widget.model
                                         .isOperator(widget.model.buttons[index])

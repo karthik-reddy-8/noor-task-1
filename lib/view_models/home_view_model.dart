@@ -23,14 +23,14 @@ class HomeViewModel extends ChangeNotifier {
     '2',
     '3',
     '+',
-    '+/-',
+    '+/_',
     '0',
     '.',
     '=',
   ];
 
   bool isOperator(String x) {
-    if (x == '/' || x == 'x' || x == '-' || x == '+' || x == '=' || x == '+/-') {
+    if (x == '/' || x == 'x' || x == '-' || x == '+' || x == '=' || x == '+/_') {
       return true;
     }
     return false;
@@ -53,10 +53,10 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> equalPressed() async{
     String finalUserInput = userInput;
     finalUserInput = userInput.replaceAll('x', '*');
+    finalUserInput = userInput.replaceAll('+/_', '-');
     Parser p = Parser();
     Expression exp = p.parse(finalUserInput);
     ContextModel cm = ContextModel();
