@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calculator/constants/colors.dart';
 import 'package:flutter_calculator/utils/app.dart';
 import 'package:flutter_calculator/utils/custom_widgets.dart';
+import 'package:flutter_calculator/utils/utilities.dart';
 import 'package:flutter_calculator/view_models/home_view_model.dart';
+import 'package:flutter_calculator/utils/theme_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
@@ -17,40 +19,39 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeModel>(
-      create: (_) => ThemeModel(),
-      child: Consumer<ThemeModel>(
-        builder: (_, model, __) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData.light(),
-            // Provide light theme.
-            darkTheme: ThemeData.dark(),
-            // Provide dark theme.
-            themeMode: model.mode,
-            // Decides which theme to show.
-            home: Scaffold(
-              body: Padding(
-                padding: EdgeInsets.symmetric(horizontal: App.width * 0.04),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            App.columnSpacer(height: App.height * 0.07),
-                            IconButton(
-                                alignment: Alignment.topRight,
-                                onPressed: () {
-                                  model.toggleMode();
-                                  widget.model.isDarkMode =
-                                      !widget.model.isDarkMode;
-                                },
-                                icon: widget.model.isDarkMode
-                                    ? const Icon(Icons.light_mode_outlined)
-                                    : const Icon(Icons.bedtime_outlined)),
-                            App.columnSpacer(height: App.height * 0.1),
+    return Consumer<ThemeNotifier>(
+        builder: (context, ThemeNotifier themeNotifier, child) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: themeNotifier.getTheme(),
+        home: Scaffold(
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: App.width * 0.04),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        App.columnSpacer(height: App.height * 0.07),
+                        IconButton(
+                            alignment: Alignment.topRight,
+                            onPressed: () {
+                              printLog(widget.model.isDarkMode);
+                              (widget.model.isDarkMode =
+                                          !widget.model.isDarkMode) ==
+                                      true
+                                  ? themeNotifier.setDarkMode()
+                                  : themeNotifier.setLightMode();
+                            },
+                            icon: widget.model.isDarkMode
+                                ? const Icon(Icons.light_mode_outlined)
+                                : const Icon(Icons.bedtime_outlined)),
+                        App.columnSpacer(height: App.height * 0.08),
+                        App.columnSpacer(height: App.height * 0.01),
+                        Wrap(
+                          children: [
                             Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: App.width * 0.03),
@@ -58,122 +59,123 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                               child: Text(
                                 widget.model.userInput.replaceAll('+/_', '-'),
                                 style: TextStyle(
-                                    fontSize: App.textTheme.headline6!.fontSize,
+                                    fontSize: 18,
                                     color: customColor.labelColor),
                               ),
                             ),
-                            App.columnSpacer(height: App.height * 0.01),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: App.width * 0.03),
+                                  horizontal: App.width * 0.03,
+                                  vertical: App.height * 0.001),
                               alignment: Alignment.centerRight,
                               child: Text(
                                 widget.model.answer,
                                 style: TextStyle(
-                                    fontSize: App.textTheme.headline2!.fontSize,
+                                    fontSize: 45,
                                     color: widget.model.isDarkMode
                                         ? customColor.white
                                         : customColor.black,
                                     fontWeight: FontWeight.bold),
                               ),
-                            )
-                          ]),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: GridView.builder(
-                          itemCount: widget.model.buttons.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4,
-                                  crossAxisSpacing: App.width * 0.02,
-                                  mainAxisSpacing: App.height * 0.01),
-                          itemBuilder: (BuildContext context, int index) {
-                            if (index == 0) {
-                              return buildButton(
-                                buttonTapped: () {
-                                  widget.model.changeInitialValues();
-                                },
-                                buttonText: widget.model.buttons[index],
-                                color: widget.model.isDarkMode
-                                    ? customColor.grey
-                                    : customColor.transparent,
-                                textColor: customColor.labelColor,
-                              );
-                            } else if (index == 1) {
-                              return buildButton(
-                                buttonTapped: () {
-                                  widget.model
-                                      .deleteUserInputs(widget.model.userInput);
-                                },
-                                buttonText: widget.model.buttons[index],
-                                color: widget.model.isDarkMode
-                                    ? customColor.grey
-                                    : customColor.transparent,
-                                textColor: customColor.labelColor,
-                              );
-                            } else if (index == 2) {
-                              return buildButton(
-                                buttonTapped: () {
-                                  widget.model.buttonIndex(index);
-                                },
-                                buttonText: widget.model.buttons[index],
-                                color: widget.model.isDarkMode
-                                    ? customColor.white
-                                    : customColor.transparent,
-                                textColor: customColor.teal,
-                              );
-                            } else if (index == 16) {
-                              return buildButton(
-                                buttonText: widget.model.buttons[index],
-                                buttonTapped: () {
-                                  widget.model.buttonIndex(index);
-                                },
-                                color: widget.model
-                                        .isOperator(widget.model.buttons[index])
-                                    ? customColor.transparent
-                                    : customColor.white,
-                                textColor: customColor.labelColor,
-                              );
-                            } else if (index == 19) {
-                              return buildButton(
-                                buttonTapped: () {
-                                  widget.model.equalPressed();
-                                },
-                                buttonText: widget.model.buttons[index],
-                                color: widget.model.isDarkMode
-                                    ? customColor.white
-                                    : customColor.transparent,
-                                textColor: customColor.teal,
-                              );
-                            } else {
-                              return buildButton(
-                                buttonTapped: () {
-                                  widget.model.buttonIndex(index);
-                                },
-                                buttonText: widget.model.buttons[index],
-                                color: widget.model
-                                        .isOperator(widget.model.buttons[index])
-                                    ? (widget.model.isDarkMode
-                                        ? customColor.white
-                                        : customColor.transparent)
-                                    : customColor.transparent,
-                                textColor: widget.model
-                                        .isOperator(widget.model.buttons[index])
-                                    ? customColor.teal
-                                    : customColor.labelColor,
-                              );
-                            }
-                          }),
-                    ),
-                  ],
+                            ),
+                          ],
+                        )
+                      ]),
                 ),
-              ),
+                Expanded(
+                  flex: 3,
+                  child: GridView.builder(
+                      itemCount: widget.model.buttons.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: App.width * 0.02,
+                          mainAxisSpacing: App.height * 0.01),
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return buildButton(
+                              buttonTapped: () {
+                                widget.model.changeInitialValues();
+                              },
+                              buttonText: widget.model.buttons[index],
+                              color: Theme.of(context).disabledColor);
+                        } else if (index == 1) {
+                          return buildButton(
+                              buttonTapped: () {
+                                widget.model
+                                    .deleteUserInputs(widget.model.userInput);
+                              },
+                              buttonText: widget.model.buttons[index],
+                              color: Theme.of(context).disabledColor);
+                        } else if (index == 2) {
+                          return buildButton(
+                            buttonTapped: () {
+                              widget.model.buttonIndex(index);
+                              widget.model.removeDoubleAuthOperators(
+                                  widget.model.userInput);
+                            },
+                            buttonText: widget.model.buttons[index],
+                            color: Theme.of(context).secondaryHeaderColor,
+                            textColor: customColor.teal,
+                          );
+                        } else if (index == 16) {
+                          return buildButton(
+                            buttonText: widget.model.buttons[index],
+                            buttonTapped: () {
+                              widget.model.buttonIndex(index);
+                              widget.model.removeDoubleAuthOperators(
+                                  widget.model.userInput);
+                            },
+                          );
+                        } else if (index == 18) {
+                          return buildButton(
+                            buttonTapped: () {
+                              widget.model.buttonIndex(index);
+                              widget.model.removeDoubleAuthOperators(
+                                  widget.model.userInput);
+                            },
+                            buttonText: widget.model.buttons[index],
+                            textColor: customColor.teal,
+                          );
+                        } else if (index == 19) {
+                          return buildButton(
+                            buttonTapped: () {
+                              widget.model.equalPressed();
+                            },
+                            buttonText: widget.model.buttons[index],
+                            color: Theme.of(context).secondaryHeaderColor,
+                            textColor: customColor.teal,
+                          );
+                        } else {
+                          return buildButton(
+                            buttonTapped: () {
+                              widget.model.buttonIndex(index);
+                              widget.model
+                                      .isOperator(widget.model.buttons[index])
+                                  ? widget.model.removeDoubleAuthOperators(
+                                      widget.model.userInput)
+                                  : '';
+                            },
+                            buttonText: widget.model.buttons[index],
+                            color: widget.model
+                                    .isOperator(widget.model.buttons[index])
+                                ? (themeNotifier.getTheme() != null
+                                    ? customColor.white
+                                    : customColor.transparent)
+                                : customColor.transparent,
+                            textColor: widget.model
+                                    .isOperator(widget.model.buttons[index])
+                                ? customColor.teal
+                                : customColor.labelColor,
+                          );
+                        }
+                      }),
+                ),
+              ],
             ),
-          );
-        },
-      ),
-    );
+          ),
+        ),
+      );
+    });
   }
 }
 
@@ -187,18 +189,5 @@ class HomePage extends StatelessWidget {
         builder: (_, model, __) {
           return Home(model: model);
         });
-  }
-}
-
-class ThemeModel with ChangeNotifier {
-  ThemeMode _mode;
-
-  ThemeMode get mode => _mode;
-
-  ThemeModel({ThemeMode mode = ThemeMode.light}) : _mode = mode;
-
-  void toggleMode() {
-    _mode = _mode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    notifyListeners();
   }
 }

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calculator/utils/app.dart';
 import 'package:flutter_calculator/views/home_page.dart';
+import 'package:flutter_calculator/utils/theme_manager.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  return runApp(ChangeNotifierProvider<ThemeNotifier>(
+    create: (_) => ThemeNotifier(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -11,18 +15,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-      ),
-      themeMode: ThemeMode.dark,
-      navigatorKey: AppContext.navigatorState,
-      debugShowCheckedModeBanner: false,
-      home: const HomePage(),
-    ); // MaterialApp
+    return Consumer<ThemeNotifier>(
+        builder: (context, theme, _) => MaterialApp(
+              theme: theme.getTheme(),
+              debugShowCheckedModeBanner: false,
+              home: const HomePage(),
+            ));
   }
 }
-

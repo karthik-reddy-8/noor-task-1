@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calculator/utils/utilities.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 class HomeViewModel extends ChangeNotifier {
@@ -30,38 +31,72 @@ class HomeViewModel extends ChangeNotifier {
   ];
 
   bool isOperator(String x) {
-    if (x == '/' || x == 'x' || x == '-' || x == '+' || x == '=' || x == '+/_') {
+    if (x == '/' ||
+        x == 'x' ||
+        x == '-' ||
+        x == '+' ||
+        x == '=' ||
+        x == '+/_') {
       return true;
     }
     return false;
   }
 
-  Future<void> changeInitialValues() async{
+  Future<void> removeDoubleAuthOperators(String input) async {
+    if (userInput.contains('%%') == true) {
+      userInput = input.substring(0, userInput.length - 1);
+    } else if (userInput.contains('++') == true) {
+      userInput = input.substring(0, userInput.length - 1);
+    } else if (userInput.contains('--') == true) {
+      userInput = input.substring(0, userInput.length - 1);
+    } else if (userInput.contains('xx') == true) {
+      userInput = input.substring(0, userInput.length - 1);
+    } else if (userInput.contains('//') == true) {
+      userInput = input.substring(0, userInput.length - 1);
+    } else if (userInput.contains('+/_+/_') == true) {
+      userInput = input.substring(0, userInput.length - 3);
+    } else if (userInput.contains('..') == true) {
+      userInput = input.substring(0, userInput.length - 1);
+    } else {
+      userInput = userInput;
+    }
+    notifyListeners();
+  }
+
+  Future<void> changeInitialValues() async {
     userInput = '';
     answer = '0';
     notifyListeners();
   }
 
-  Future<void> deleteUserInputs(String input) async{
-    userInput =
-        input.substring(0, userInput.length - 1);
+  Future<void> deleteUserInputs(String input) async {
+    if (userInput.contains('+/_') == true) {
+      userInput = input.substring(0, userInput.length - 3);
+    } else {
+      userInput = input.substring(0, userInput.length - 1);
+    }
     notifyListeners();
   }
 
-  Future<void> buttonIndex(int index) async{
+  Future<void> buttonIndex(int index) async {
     userInput += buttons[index];
     notifyListeners();
   }
 
-  Future<void> equalPressed() async{
+  Future<void> equalPressed() async {
     String finalUserInput = userInput;
     finalUserInput = userInput.replaceAll('x', '*');
-    finalUserInput = userInput.replaceAll('+/_', '-');
-    Parser p = Parser();
-    Expression exp = p.parse(finalUserInput);
-    ContextModel cm = ContextModel();
-    double eval = exp.evaluate(EvaluationType.REAL, cm);
-    answer = eval.toString();
+    printLog(finalUserInput);
+    if (finalUserInput.isNotEmpty) {
+      String input = finalUserInput.replaceAll('+/_', '-');
+      Parser p = Parser();
+      Expression exp = p.parse(input);
+      ContextModel cm = ContextModel();
+      double eval = exp.evaluate(EvaluationType.REAL, cm);
+      answer = eval.toString();
+    } else {
+      return;
+    }
     notifyListeners();
   }
 }
